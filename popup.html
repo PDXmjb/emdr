@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 250px;
+      padding: 15px;
+      font-family: system-ui, sans-serif;
+      font-size: 14px;
+    }
+    h3 {
+      margin: 0 0 15px 0;
+      font-size: 16px;
+    }
+    .control {
+      margin-bottom: 12px;
+    }
+    label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    input[type="range"] {
+      flex: 1;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      border-radius: 24px;
+      transition: 0.2s;
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: #4a90d9;
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+    }
+    .toggle-label {
+      margin-left: 8px;
+    }
+    #volume-control, #frequency-control, #centerFade-control {
+      display: none;
+    }
+    #volume-control.visible, #frequency-control.visible, #centerFade-control.visible {
+      display: block;
+    }
+    .color-swatches {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .color-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+    .color-swatch:hover {
+      border-color: #999;
+    }
+    .color-swatch.selected {
+      border-color: #333;
+    }
+    .hex-input {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .hex-input input {
+      flex: 1;
+      padding: 4px 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    .color-preview {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .value {
+      min-width: 50px;
+      text-align: right;
+      font-size: 12px;
+      color: #666;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    #toggle {
+      background: #4a90d9;
+      color: white;
+    }
+    #toggle:hover {
+      background: #3a7bc8;
+    }
+    #toggle.active {
+      background: #d94a4a;
+    }
+    #toggle.active:hover {
+      background: #c83a3a;
+    }
+  </style>
+</head>
+<body>
+  <h3>EMDR Circle Settings</h3>
+
+  <div class="control">
+    <label>Diameter</label>
+    <div class="input-row">
+      <input type="range" id="diameter" min="20" max="200" value="100">
+      <span class="value" id="diameter-value">100px</span>
+    </div>
+  </div>
+
+  <div class="control">
+    <label>Speed (cycle duration)</label>
+    <div class="input-row">
+      <input type="range" id="speed" min="0.5" max="5" step="0.1" value="1">
+      <span class="value" id="speed-value">1.0s</span>
+    </div>
+  </div>
+
+  <div class="control">
+    <label>Max Width (from center)</label>
+    <div class="input-row">
+      <input type="range" id="maxWidth" min="100" max="1500" step="50" value="1500">
+      <span class="value" id="maxWidth-value">Full</span>
+    </div>
+  </div>
+
+  <div class="control">
+    <label>Opacity</label>
+    <div class="input-row">
+      <input type="range" id="opacity" min="0.1" max="1" step="0.1" value="1">
+      <span class="value" id="opacity-value">100%</span>
+    </div>
+  </div>
+
+  <div class="control">
+    <label>Sound</label>
+    <div class="input-row">
+      <label class="toggle-switch">
+        <input type="checkbox" id="soundEnabled">
+        <span class="toggle-slider"></span>
+      </label>
+      <span class="toggle-label" id="sound-label">Off</span>
+    </div>
+  </div>
+
+  <div class="control" id="volume-control">
+    <label>Volume</label>
+    <div class="input-row">
+      <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5">
+      <span class="value" id="volume-value">50%</span>
+    </div>
+  </div>
+
+  <div class="control" id="frequency-control">
+    <label>Tone Frequency</label>
+    <div class="input-row">
+      <input type="range" id="frequency" min="30" max="800" step="10" value="400">
+      <span class="value" id="frequency-value">400Hz</span>
+    </div>
+  </div>
+
+  <div class="control" id="centerFade-control">
+    <label>Center Fade</label>
+    <div class="input-row">
+      <input type="range" id="centerFade" min="0" max="1" step="0.1" value="0">
+      <span class="value" id="centerFade-value">Off</span>
+    </div>
+  </div>
+
+  <div class="control">
+    <label>Color</label>
+    <div class="color-swatches" id="color-swatches">
+      <div class="color-swatch" data-color="#4a90d9" style="background:#4a90d9"></div>
+      <div class="color-swatch" data-color="#d94a4a" style="background:#d94a4a"></div>
+      <div class="color-swatch" data-color="#4ad94a" style="background:#4ad94a"></div>
+      <div class="color-swatch" data-color="#d9d94a" style="background:#d9d94a"></div>
+      <div class="color-swatch" data-color="#d94ad9" style="background:#d94ad9"></div>
+      <div class="color-swatch" data-color="#4ad9d9" style="background:#4ad9d9"></div>
+      <div class="color-swatch" data-color="#ffffff" style="background:#ffffff"></div>
+      <div class="color-swatch" data-color="#000000" style="background:#000000"></div>
+    </div>
+    <div class="hex-input">
+      <div class="color-preview" id="color-preview"></div>
+      <input type="text" id="color" value="#4a90d9" maxlength="7" placeholder="#4a90d9">
+    </div>
+  </div>
+
+  <button id="toggle">Start</button>
+
+  <script src="popup.js"></script>
+</body>
+</html>
