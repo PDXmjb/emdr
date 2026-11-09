@@ -11,6 +11,7 @@
     <h1>EMDR Companion</h1>
     <nav>
       <button data-tab="session" class="active">Session</button>
+      <button data-tab="free">Free mode</button>
       <button data-tab="targets">Targets &amp; history</button>
       <button data-tab="settings">Settings</button>
     </nav>
@@ -26,6 +27,7 @@
         <button type="submit">Send</button>
       </form>
     </section>
+    <section id="tab-free" hidden></section>
     <section id="tab-targets" hidden></section>
     <section id="tab-settings" hidden></section>
   </main>
@@ -34,6 +36,11 @@
   <div id="bls" hidden>
     <div id="bls-hint"></div>
     <div id="bls-circle"></div>
+    <div id="bls-nudge" hidden>
+      <p>You've been going for a while. Check in with yourself: how are you doing?</p>
+      <button id="bls-nudge-go" class="primary">Keep going</button>
+      <button id="bls-nudge-end">End round</button>
+    </div>
     <div id="bls-hud">
       <span id="bls-count"></span>
       <button id="bls-pause">Pause</button>
@@ -83,6 +90,7 @@
   <script src="js/store.js"></script>
   <script src="js/bls.js"></script>
   <script src="js/ground.js"></script>
+  <script src="js/free.js"></script>
   <script src="js/ai.js"></script>
   <script src="js/app.js"></script>
 </body>

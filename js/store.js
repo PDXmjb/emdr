@@ -19,6 +19,13 @@ const Store = (() => {
     },
     ai: { key: '', model: 'claude-sonnet-5-5' },
     tts: { on: false, voice: '', rate: 1 }, // read the guide's messages aloud
+    free: {
+      seconds: 60, infinite: false,      // round length
+      auto: false, autoSec: 30,          // start the next round automatically
+      chime: true,                       // soft tone when a round ends
+      nudge: true, nudgeMin: 5,          // check-in prompt after this much continuous movement
+      counters: true, hidden: false      // show the counters / hide the settings panel
+    },
     safePlace: '',
     targets: [],
     sessions: []
@@ -62,6 +69,13 @@ const Store = (() => {
     set('sessions', all);
   }
 
+  function upsertSession(s) {
+    const all = get('sessions');
+    const i = all.findIndex(x => x.id === s.id);
+    if (i >= 0) all[i] = s; else all.push(s);
+    set('sessions', all);
+  }
+
   function exportAll() {
     const out = {};
     for (const k of Object.keys(defaults)) out[k] = get(k);
@@ -70,7 +84,7 @@ const Store = (() => {
   }
 
   function importAll(data) {
-    for (const k of ['bls', 'tts', 'safePlace', 'targets', 'sessions']) {
+    for (const k of ['bls', 'tts', 'free', 'safePlace', 'targets', 'sessions']) {
       if (data[k] !== undefined) set(k, data[k]);
     }
   }
@@ -79,5 +93,5 @@ const Store = (() => {
     for (const k of Object.keys(defaults)) localStorage.removeItem(PREFIX + k);
   }
 
-  return { get, set, uid, saveTarget, deleteTarget, addSession, exportAll, importAll, wipe, defaults };
+  return { get, set, uid, saveTarget, deleteTarget, addSession, upsertSession, exportAll, importAll, wipe, defaults };
 })();

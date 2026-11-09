@@ -677,7 +677,8 @@
 
   document.querySelectorAll('nav button').forEach(b => b.addEventListener('click', () => {
     document.querySelectorAll('nav button').forEach(x => x.classList.toggle('active', x === b));
-    for (const id of ['session', 'targets', 'settings']) $('#tab-' + id).hidden = id !== b.dataset.tab;
+    for (const id of ['session', 'free', 'targets', 'settings']) $('#tab-' + id).hidden = id !== b.dataset.tab;
+    if (b.dataset.tab === 'free') FreeMode.render($('#tab-free'), el); else FreeMode.leave();
     if (b.dataset.tab === 'targets') renderTargets();
     if (b.dataset.tab === 'settings') renderSettings();
   }));
@@ -709,9 +710,11 @@
     if (!sessions.length) root.append(el('p', { class: 'muted' }, 'No sessions yet.'));
     for (const s of sessions) {
       root.append(el('div', { class: 'card' },
-        el('h3', {}, `${fmtDate(s.date)} · ${s.type === 'resource' ? 'Stabilisation' : (s.targetTitle || 'Session')}`,
+        el('h3', {}, `${fmtDate(s.date)} · ${s.type === 'resource' ? 'Stabilisation' : s.type === 'free' ? 'Free mode' : (s.targetTitle || 'Session')}`,
           s.incomplete ? el('span', { class: 'tag' }, 'incomplete') : ''),
-        el('div', { class: 'small' }, `${s.minutes} min · ${s.sets} sets · distress ${s.sudStart ?? '–'} → ${s.sudEnd ?? '–'}${s.vocEnd ? ` · belief ${s.vocStart ?? '–'} → ${s.vocEnd}` : ''}`),
+        s.type === 'free'
+          ? el('div', { class: 'small' }, `${s.rounds} round${s.rounds === 1 ? '' : 's'} · ${Math.floor(s.activeSec / 60)}m ${s.activeSec % 60}s of eye movement`)
+          : el('div', { class: 'small' }, `${s.minutes} min · ${s.sets} sets · distress ${s.sudStart ?? '–'} → ${s.sudEnd ?? '–'}${s.vocEnd ? ` · belief ${s.vocStart ?? '–'} → ${s.vocEnd}` : ''}`),
         s.notes ? el('div', { class: 'small' }, 'Note: ' + s.notes) : '',
         el('details', {}, el('summary', {}, 'Transcript'),
           (s.transcript || []).map(m => el('div', { class: 'small' }, (m.role === 'user' ? 'You: ' : 'Guide: ') + m.content)))));
